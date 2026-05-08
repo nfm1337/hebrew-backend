@@ -7,7 +7,7 @@ from hebrew_backend.routers import health
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     yield
     await engine.dispose()
 
