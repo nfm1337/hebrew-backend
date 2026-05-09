@@ -95,6 +95,7 @@ line-ending = "lf"
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
+exclude = ["alembic"]
 disallow_untyped_defs=true
 no_implicit_optional=true
 warn_return_any=true
