@@ -93,7 +93,7 @@ flowchart TB
 
 **Цель:** в Android-приложении нажимаешь кнопку — на экране появляется сгенерированный иврит-текст.
 
-- [ ] **Дни 1–2:** Backend skeleton — FastAPI, Postgres в Docker, базовые модели, anonymous user_id, .env, базовый деплой на VPS
+- [x] **Дни 1–2:** Backend skeleton — FastAPI, Postgres в Docker, базовые модели, anonymous user_id, .env, базовый деплой на VPS
 - [ ] **Дни 2–3:** Первый LLM-вызов — генерация иврит-текста с констрейнтами (уровень + тема + целевые слова) через Pydantic structured output
 - [ ] **Дни 3–4:** Android skeleton — Compose, навигация, один экран
 - [ ] **День 5:** Соединение — кнопка → API → текст на экране с RTL-рендером
