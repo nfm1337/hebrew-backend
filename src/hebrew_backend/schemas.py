@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from openai import BaseModel
+from pydantic import BaseModel
 
 from hebrew_backend.models import Level
 
