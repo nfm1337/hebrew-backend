@@ -10,6 +10,7 @@ class GenerateSessionRequest(BaseModel):
     user_id: UUID
     level: Level
     topic: str
+    model: str | None = None
 
 
 class GenerateSessionResponse(BaseModel):

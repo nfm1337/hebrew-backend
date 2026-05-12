@@ -14,7 +14,9 @@ router = APIRouter(prefix="/sessions", tags=["sessions"])
 async def generate_session(
     request: GenerateSessionRequest, db: SessionDep
 ) -> GenerateSessionResponse:
-    result = await generate_hebrew_session(request.level, request.topic)
+    result = await generate_hebrew_session(
+        level=request.level, topic=request.topic, model=request.model
+    )
 
     session = LearningSession(
         id=uuid4(),

@@ -1,11 +1,7 @@
-import instructor
-from anthropic import AsyncAnthropic
-from openai import BaseModel
+from pydantic import BaseModel
 
 from hebrew_backend.models import Level
-from hebrew_backend.settings import settings
-
-client = instructor.from_anthropic(AsyncAnthropic(api_key=settings.anthropic_api_key))
+from hebrew_backend.services.llm import get_default_model, get_provider, parse_model_string
 
 LEVEL_DESCRIPTIONS = {
     Level.A1: "очень простые предложения, только настоящее время, базовая лексика",
@@ -26,31 +22,25 @@ class HebrewTextResult(BaseModel):
     translation: str
 
 
-async def generate_hebrew_session(level: Level, topic: str) -> HebrewTextResult:
-    result: HebrewTextResult = await client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1000,
-        response_model=HebrewTextResult,
-        messages=[
-            {
-                "role": "user",
-                "content": f"""Создай короткий текст на иврите для русскоязычного студента.
-
+def _build_prompt(level: Level, topic: str) -> str:
+    return f"""Создай короткий текст на иврите для русскоязычного студента.
 Уровень: {level.value} — {LEVEL_DESCRIPTIONS[level]}
 Тема: {topic}
 Новых слов: {TARGET_WORD_COUNT[level]}
+Требования: длина 50-100 слов, сложность строго {level.value}, текст связный.
+Верни: generated_text (иврит), target_words (леммы новых слов), translation (русский)."""
 
-Требования:
-- Длина 50-100 слов
-- Сложность строго соответствует уровню {level.value}
-- Текст связный и естественный
-- Новые слова вводятся органично в контекст
 
-Верни:
-- generated_text: текст на иврите
-- target_words: список новых слов в базовой форме (инфинитив для глаголов, единственное число для существительных)
-- translation: полный перевод на русский язык""",
-            }
-        ],
+async def generate_hebrew_session(
+    level: Level, topic: str, model: str | None = None
+) -> HebrewTextResult:
+    chosen_model = model or get_default_model()
+    provider = get_provider(chosen_model)
+    _, model_name = parse_model_string(chosen_model)
+
+    return await provider.generate_structured(
+        model=model_name,
+        prompt=_build_prompt(level, topic),
+        response_model=HebrewTextResult,
+        max_tokens=1000,
     )
-    return result

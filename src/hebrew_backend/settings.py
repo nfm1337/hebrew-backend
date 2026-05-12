@@ -16,10 +16,21 @@ class Settings(BaseSettings):
 
     database_url: str = ""
 
-    anthropic_api_key: str
+    anthropic_api_key: str = ""
+    google_api_key: str = ""
+    openai_api_key: str = ""
 
     debug: bool = False
     port: int = 8000
+
+    @model_validator(mode="after")
+    def validate_at_least_one_llm_key(self) -> Self:
+        if not any([self.anthropic_api_key, self.google_api_key, self.openai_api_key]):
+            raise ValueError(
+                "At least one LLM API must be set: "
+                "ANTHROPIC_API_KEY, GOOGLE_API_KEY or OPENAI_API_KEY"
+            )
+        return self
 
     @model_validator(mode="after")
     def compose_database_url(self) -> Self:
@@ -36,4 +47,4 @@ class Settings(BaseSettings):
         return self
 
 
-settings = Settings()
+settings = Settings()  # pyright: ignore[reportCallIssue]
