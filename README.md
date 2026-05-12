@@ -71,3 +71,15 @@ Migrations run automatically on container start.
 uv run ruff check .
 uv run mypy src/
 ```
+
+## Eval Results
+
+Baseline results (20 test cases, 3 levels × 6 topics):
+
+| Model                                    | Level ↑ | Topic ↑ | Grammar ↑ | All pass ↑ |
+| ---------------------------------------- | ------- | ------- | --------- | ---------- |
+| anthropic/claude-sonnet-4-6              | 90%     | 55%     | 100%      | 50%        |
+| openrouter/google/gemma-4-31b-it         | 90%     | 30%     | 100%      | 30%        |
+| openrouter/google/gemini-3-flash-preview | 42%     | 42%     | 95%       | 11%        |
+
+Judge: `openrouter/qwen/qwen-2.5-72b-instruct`

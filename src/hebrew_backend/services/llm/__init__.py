@@ -1,7 +1,12 @@
 from functools import lru_cache
 
 from hebrew_backend.services.llm.base import LLMProvider, LLMProviderError
-from hebrew_backend.services.llm.providers import AnthropicProvider, GoogleProvider, OpenAIProvider
+from hebrew_backend.services.llm.providers import (
+    AnthropicProvider,
+    GoogleProvider,
+    OpenAIProvider,
+    OpenRouterProvider,
+)
 from hebrew_backend.settings import settings
 
 __all__ = [
@@ -38,6 +43,8 @@ def _build_registry() -> dict[str, LLMProvider]:
         registry["google"] = GoogleProvider(settings.google_api_key)
     if settings.openai_api_key:
         registry["openai"] = OpenAIProvider(settings.openai_api_key)
+    if settings.openrouter_api_key:
+        registry["openrouter"] = OpenRouterProvider(settings.openrouter_api_key)
     return registry
 
 

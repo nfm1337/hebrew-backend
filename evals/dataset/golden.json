@@ -1,0 +1,133 @@
+[
+    {
+        "id": "a1-family-01",
+        "level": "A1",
+        "topic": "семья",
+        "expected_word_count_range": [2, 4],
+        "notes": "Базовый случай, простая лексика"
+    },
+    {
+        "id": "a1-food-01",
+        "level": "A1",
+        "topic": "еда",
+        "expected_word_count_range": [2, 4]
+    },
+    {
+        "id": "b1-politics-01",
+        "level": "B1",
+        "topic": "политика",
+        "expected_word_count_range": [5, 7],
+        "notes": "Сложная тема, проверка на адаптацию лексики"
+    },
+    {
+        "id": "a1-food-kitchen-01",
+        "level": "A1",
+        "topic": "Еда и кухня",
+        "expected_word_count_range": [2, 4],
+        "notes": "Бытовая лексика, подходит для A1"
+    },
+    {
+        "id": "a1-israel-history-01",
+        "level": "A1",
+        "topic": "История Израиля",
+        "expected_word_count_range": [2, 4],
+        "notes": "Сложная тема для A1 — проверка, умеет ли модель упростить до базовых фактов"
+    },
+    {
+        "id": "a1-politics-01",
+        "level": "A1",
+        "topic": "Политика",
+        "expected_word_count_range": [2, 4],
+        "notes": "Политика на A1 — проверка адаптации абстрактной лексики"
+    },
+    {
+        "id": "a1-tech-01",
+        "level": "A1",
+        "topic": "Технологии",
+        "expected_word_count_range": [2, 4],
+        "notes": "Современные заимствования (טלפון, מחשב) должны быть доступны на A1"
+    },
+    {
+        "id": "a1-science-01",
+        "level": "A1",
+        "topic": "Наука",
+        "expected_word_count_range": [2, 4],
+        "notes": "Проверка упрощения научной темы до A1-уровня"
+    },
+    {
+        "id": "a1-culture-01",
+        "level": "A1",
+        "topic": "Культура и искусство",
+        "expected_word_count_range": [2, 4]
+    },
+    {
+        "id": "a2-food-kitchen-01",
+        "level": "A2",
+        "topic": "Еда и кухня",
+        "expected_word_count_range": [3, 5],
+        "notes": "Прошедшее время — описание приготовления блюда"
+    },
+    {
+        "id": "a2-israel-history-01",
+        "level": "A2",
+        "topic": "История Израиля",
+        "expected_word_count_range": [3, 5],
+        "notes": "Нарратив в прошедшем времени, базовые исторические факты"
+    },
+    {
+        "id": "a2-politics-01",
+        "level": "A2",
+        "topic": "Политика",
+        "expected_word_count_range": [3, 5]
+    },
+    {
+        "id": "a2-tech-01",
+        "level": "A2",
+        "topic": "Технологии",
+        "expected_word_count_range": [3, 5]
+    },
+    {
+        "id": "a2-science-01",
+        "level": "A2",
+        "topic": "Наука",
+        "expected_word_count_range": [3, 5]
+    },
+    {
+        "id": "a2-culture-01",
+        "level": "A2",
+        "topic": "Культура и искусство",
+        "expected_word_count_range": [3, 5]
+    },
+    {
+        "id": "b1-food-kitchen-01",
+        "level": "B1",
+        "topic": "Еда и кухня",
+        "expected_word_count_range": [5, 7],
+        "notes": "Тематическая кулинарная лексика, сложные конструкции"
+    },
+    {
+        "id": "b1-israel-history-01",
+        "level": "B1",
+        "topic": "История Израиля",
+        "expected_word_count_range": [5, 7],
+        "notes": "Исторический нарратив, пассивный залог, даты и события"
+    },
+    {
+        "id": "b1-tech-01",
+        "level": "B1",
+        "topic": "Технологии",
+        "expected_word_count_range": [5, 7]
+    },
+    {
+        "id": "b1-science-01",
+        "level": "B1",
+        "topic": "Наука",
+        "expected_word_count_range": [5, 7]
+    },
+    {
+        "id": "b1-culture-01",
+        "level": "B1",
+        "topic": "Культура и искусство",
+        "expected_word_count_range": [5, 7]
+    }
+]

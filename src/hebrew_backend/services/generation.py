@@ -4,9 +4,9 @@ from hebrew_backend.models import Level
 from hebrew_backend.services.llm import get_default_model, get_provider, parse_model_string
 
 LEVEL_DESCRIPTIONS = {
-    Level.A1: "очень простые предложения, только настоящее время, базовая лексика",
-    Level.A2: "простые предложения, прошедшее время, редко будущее время, повседневные ситуации",
-    Level.B1: "более сложные конструкции, разнообразные времена, тематическая лексика",
+    Level.A1: "present tense only, ~1000 most frequent words, simple declarative sentences, no subordinate clauses",
+    Level.A2: "past and future tense, basic modal verbs, simple subordinate clauses with כי/אם, ~2000 words",
+    Level.B1: "all main tenses, hif'il/hitpa'el binyanim, passive voice, thematic vocabulary ~3000-4000 words, complex sentences",
 }
 
 TARGET_WORD_COUNT = {
@@ -23,12 +23,23 @@ class HebrewTextResult(BaseModel):
 
 
 def _build_prompt(level: Level, topic: str) -> str:
-    return f"""Создай короткий текст на иврите для русскоязычного студента.
-Уровень: {level.value} — {LEVEL_DESCRIPTIONS[level]}
-Тема: {topic}
-Новых слов: {TARGET_WORD_COUNT[level]}
-Требования: длина 50-100 слов, сложность строго {level.value}, текст связный.
-Верни: generated_text (иврит), target_words (леммы новых слов), translation (русский)."""
+    return f"""Write a short Hebrew text for a Russian-speaking student learning Hebrew.
+
+Level: {level.value} — {LEVEL_DESCRIPTIONS[level]}
+Topic: {topic}
+New vocabulary words to introduce: {TARGET_WORD_COUNT[level]}
+
+Requirements:
+- Length: 50-100 words
+- Complexity MUST strictly match level {level.value} — do not use grammar or vocabulary above this level
+- "{topic}" is the CENTRAL subject of the text. Every sentence must be about {topic}. Do NOT drift into generic descriptions or unrelated daily life scenes.
+- Do NOT write about "learning Hebrew", "studying words", or language learning itself
+- The new words must appear naturally in context
+
+Return:
+- generated_text: the Hebrew text
+- target_words: list of new words in base form (infinitive for verbs, singular for nouns)
+- translation: full Russian translation of the text"""
 
 
 async def generate_hebrew_session(

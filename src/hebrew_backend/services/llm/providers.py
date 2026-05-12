@@ -68,8 +68,7 @@ class GoogleProvider:
         if not api_key:
             raise ValueError("Google API key is required")
         self._client = instructor.from_genai(
-            genai.Client(api_key=api_key),
-            mode=instructor.Mode.GENAI_TOOLS,
+            genai.Client(api_key=api_key), mode=instructor.Mode.GENAI_TOOLS, use_async=True
         )
 
     async def generate_structured(
@@ -78,6 +77,37 @@ class GoogleProvider:
         prompt: str,
         response_model: type[T],
         max_tokens: int = 1000,
+    ) -> T:
+        try:
+            result = await self._client.chat.completions.create(
+                model=model,
+                response_model=response_model,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return cast("T", result)
+        except Exception as e:
+            raise LLMProviderError(self.provider_name, str(e), e) from e
+
+
+class OpenRouterProvider:
+    provider_name = "openrouter"
+
+    def __init__(self, api_key: str) -> None:
+        if not api_key:
+            raise ValueError("Openrouter API key is required")
+        self._client = instructor.from_openai(
+            AsyncOpenAI(
+                api_key=api_key,
+                base_url="https://openrouter.ai/api/v1",
+            )
+        )
+
+    async def generate_structured(
+        self,
+        model: str,
+        prompt: str,
+        response_model: type[T],
+        max_tokens: int = 4000,
     ) -> T:
         try:
             result = await self._client.chat.completions.create(
