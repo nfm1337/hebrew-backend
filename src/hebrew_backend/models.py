@@ -1,27 +1,21 @@
 from datetime import UTC, date, datetime
-from enum import StrEnum
 from uuid import UUID, uuid4
 
-from sqlalchemy import JSON, Column, DateTime
+from sqlalchemy import JSON, Column, DateTime, UniqueConstraint
+from sqlalchemy import Enum as SAEnum
 from sqlmodel import Field, SQLModel
 
-
-class Level(StrEnum):
-    A1 = "A1"
-    A2 = "A2"
-    B1 = "B1"
+from hebrew_backend.enums import Binyan, Gender, GrammaticalNumber, Level, PartOfSpeech, VocabStatus
 
 
-class VocabStatus(StrEnum):
-    LEARNING = "learning"
-    KNOWN = "known"
-    MASTERED = "mastered"
+def _enum_column(enum_class: type, nullable: bool = True) -> Column:
+    return Column(SAEnum(enum_class, name=enum_class.__name__.lower()), nullable=nullable)
 
 
 class User(SQLModel, table=True):
     __tablename__ = "app_user"  # pyright: ignore[reportAssignmentType]
     id: UUID = Field(primary_key=True, default_factory=uuid4)
-    level: Level
+    level: Level = Field(sa_column=_enum_column(Level, nullable=False))
     topics: list[str] = Field(default_factory=list, sa_column=Column(JSON, nullable=False))
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
@@ -34,7 +28,7 @@ class LearningSession(SQLModel, table=True):
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     user_id: UUID = Field(foreign_key="app_user.id")
     topic: str
-    level: Level
+    level: Level = Field(sa_column=_enum_column(Level, nullable=False))
     generated_text: str
     target_words: list[str] = Field(sa_column=Column(JSON, nullable=False))
     created_at: datetime = Field(
@@ -48,7 +42,7 @@ class UserVocabulary(SQLModel, table=True):
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     user_id: UUID = Field(foreign_key="app_user.id")
     lemma: str
-    status: VocabStatus
+    status: VocabStatus = Field(sa_column=_enum_column(VocabStatus, nullable=False))
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), nullable=False),
@@ -86,16 +80,23 @@ class CardReview(SQLModel, table=True):
     reviewed_at: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False))
 
 
-class WordAnalysis(SQLModel, table=True):
-    __tablename__ = "word_analysis"  # pyright: ignore[reportAssignmentType]
+class WordAnalysisCache(SQLModel, table=True):
+    __tablename__ = "word_analysis_cache"  # pyright: ignore[reportAssignmentType]
+    __table_args__ = (UniqueConstraint("lemma", "pos", name="uq_word_analysis_lemma_pos"),)
+
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     word: str
-    context_hash: str
+    word_normalized: str
     lemma: str
     root: str | None = None
-    binyan: str | None = None
-    translation: str
-    related_words: list[str] = Field(sa_column=Column(JSON, nullable=False))
+    binyan: Binyan | None = Field(default=None, sa_column=_enum_column(Binyan))
+    pos: PartOfSpeech = Field(sa_column=_enum_column(PartOfSpeech, nullable=False))
+    gender: Gender | None = Field(default=None, sa_column=_enum_column(Gender))
+    number: GrammaticalNumber | None = Field(
+        default=None, sa_column=_enum_column(GrammaticalNumber)
+    )
+    translation_ru: str
+    related_words: list[str] = Field(default_factory=list, sa_column=Column(JSON, nullable=False))
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
         sa_column=Column(DateTime(timezone=True), nullable=False),

@@ -1,0 +1,19 @@
+[
+    {
+        "id": "verb-paal-01",
+        "word": "כוחב",
+        "sentence": "הוא כותב מכתב לחבר שלו",
+        "expected": {
+            "lemma": "כתב",
+            "root": "כ-ת-ב",
+            "binyan": "פָּעַל",
+            "pos": "verb",
+            "gender": "masculine",
+            "number": "singular"
+        },
+        "notes": "verb פָּעַל, present tense"
+    },
+    {
+        "id": ""
+    }
+]

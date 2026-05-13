@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from hebrew_backend.database import engine
-from hebrew_backend.routers import health, sessions, users
+from hebrew_backend.routers import health, sessions, users, words
 
 
 @asynccontextmanager
@@ -18,3 +18,4 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(health.router)
 app.include_router(sessions.router)
 app.include_router(users.router)
+app.include_router(words.router)
