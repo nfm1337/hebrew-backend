@@ -9,7 +9,7 @@ DATASET_PATH = Path(__file__).parent / "dataset" / "golden.json"
 
 
 def load_dataset() -> list[dict[str, Any]]:
-    with open(DATASET_PATH, encoding="utf-8") as f:
+    with Path.open(DATASET_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 

@@ -3,7 +3,8 @@ from typing import TypeVar, cast
 import instructor
 from anthropic import AsyncAnthropic
 from google import genai
-from openai import AsyncOpenAI
+from instructor.core import InstructorRetryException
+from openai import APIError, AsyncOpenAI
 from pydantic import BaseModel
 
 from hebrew_backend.services.llm.base import LLMProviderError
@@ -121,7 +122,7 @@ class OpenRouterProvider:
                     max_retries=0,  # disable instructor's history-based retry
                 )
                 return cast("T", result)
-            except Exception as e:
+            except (APIError, InstructorRetryException) as e:
                 last_exc = e
                 if attempt == _max_attempts - 1:
                     break
