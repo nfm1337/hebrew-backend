@@ -9,6 +9,32 @@ LEVEL_DESCRIPTIONS = {
     Level.B1: "all main tenses, hif'il/hitpa'el binyanim, passive voice, thematic vocabulary ~3000-4000 words, complex sentences",
 }
 
+FORBIDDEN_CONSTRUCTIONS = {
+    Level.A1: [
+        "Past tense (הלכתי, אכלת, הוא היה...)",
+        "Future tense (אלך, תאכל, יבוא...)",
+        "Any binyan other than pa'al present (no pi'el, hif'il, hitpa'el, nif'al)",
+        "Subordinate clauses (no כי, כאשר, אשר, מכיוון ש)",
+        "Relative clauses (no ש + verb)",
+        "Conditional sentences (no אם...אז)",
+        "Construct state with abstract nouns (סמיכות מופשטת)",
+    ],
+    Level.A2: [
+        "Hif'il binyan (הִפְעִיל) — causative forms",
+        "Hitpa'el binyan (הִתְפַּעֵל) — reflexive forms",
+        "Passive voice (nif'al, pu'al, huf'al)",
+        "More than one level of clause embedding",
+        "Verbal nouns (שם פועל) as clause arguments",
+        "Complex conditionals (גם אם, אפילו אם, בתנאי ש)",
+    ],
+    Level.B1: [
+        "Biblical/literary Hebrew forms (archaic verb patterns, archaic vocabulary)",
+        "Formal/legal/academic register (לשון גבוהה)",
+        "More than two embedded clauses in one sentence",
+        "Vocabulary above ~4000 most common words",
+    ],
+}
+
 TARGET_WORD_COUNT = {
     Level.A1: 2,
     Level.A2: 4,
@@ -23,9 +49,11 @@ class HebrewTextResult(BaseModel):
 
 
 def _build_prompt(level: Level, topic: str) -> str:
+    forbidden = "\n".join(f"- {c}" for c in FORBIDDEN_CONSTRUCTIONS[level])
     return f"""Write a short Hebrew text for a Russian-speaking student learning Hebrew.
 
 Level: {level.value} — {LEVEL_DESCRIPTIONS[level]}
+Forbidden at level {level.value}: {forbidden}
 Topic: {topic}
 New vocabulary words to introduce: {TARGET_WORD_COUNT[level]}
 
@@ -53,5 +81,5 @@ async def generate_hebrew_session(
         model=model_name,
         prompt=_build_prompt(level, topic),
         response_model=HebrewTextResult,
-        max_tokens=1000,
+        max_tokens=2000,
     )

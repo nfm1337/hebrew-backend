@@ -18,6 +18,7 @@ __all__ = [
 ]
 
 _DEFAULT_MODELS_BY_PRIORITY = [
+    ("openrouter", "google/gemini-3-flash-preview"),
     ("anthropic", "claude-sonnet-4-6"),
     ("google", "gemini-2.5-pro"),
     ("openai", "gpt-4o"),

@@ -1,5 +1,6 @@
 # Custom
 evals/reports
+evals/.eval_cache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

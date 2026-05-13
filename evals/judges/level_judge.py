@@ -1,5 +1,5 @@
+from evals.cache import cached_generate_structured
 from evals.judges import JUDGE_MODEL, LevelJudgement
-from hebrew_backend.services.llm import get_provider, parse_model_string
 
 LEVEL_DESCRIPTIONS = """
 A1: present tense only, basic vocabulary (1000 most frequent words), simple declarative sentences, no complex constructions
@@ -35,9 +35,8 @@ async def judge_level(
     expected_level: str,
     target_words: list[str],
 ) -> LevelJudgement:
-    _, model_name = parse_model_string(JUDGE_MODEL)
-    return await get_provider(JUDGE_MODEL).generate_structured(
-        model=model_name,
+    return await cached_generate_structured(
+        model=JUDGE_MODEL,
         prompt=JUDGE_PROMPT.format(
             text=text,
             expected_level=expected_level,

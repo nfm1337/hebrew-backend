@@ -1,5 +1,5 @@
+from evals.cache import cached_generate_structured
 from evals.judges import JUDGE_MODEL, GrammarJudgement
-from hebrew_backend.services.llm import get_provider, parse_model_string
 
 JUDGE_PROMPT = """You are an expert in Hebrew linguistics, evaluating grammatical correctness of educational texts.
 
@@ -22,9 +22,8 @@ Be strict. Even minor errors (wrong gender agreement, incorrect verb conjugation
 
 
 async def judge_grammar(text: str) -> GrammarJudgement:
-    _, model_name = parse_model_string(JUDGE_MODEL)
-    return await get_provider(JUDGE_MODEL).generate_structured(
-        model=model_name,
+    return await cached_generate_structured(
+        model=JUDGE_MODEL,
         prompt=JUDGE_PROMPT.format(text=text),
         response_model=GrammarJudgement,
     )

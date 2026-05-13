@@ -2,7 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-JUDGE_MODEL = "openrouter/qwen/qwen-2.5-72b-instruct"
+JUDGE_MODEL = "openrouter/google/gemini-3-flash-preview"
 
 
 class LevelJudgement(BaseModel):

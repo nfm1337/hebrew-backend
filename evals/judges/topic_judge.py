@@ -1,5 +1,5 @@
+from evals.cache import cached_generate_structured
 from evals.judges import JUDGE_MODEL, TopicJudgement
-from hebrew_backend.services.llm import get_provider, parse_model_string
 
 JUDGE_PROMPT = """You are an expert in Hebrew pedagogy, evaluating whether an educational text stays on topic.
 
@@ -21,9 +21,8 @@ Be strict. A text about "buying groceries" that spends most of its content descr
 
 
 async def judge_topic(text: str, expected_topic: str) -> TopicJudgement:
-    _, model_name = parse_model_string(JUDGE_MODEL)
-    return await get_provider(JUDGE_MODEL).generate_structured(
-        model=model_name,
+    return await cached_generate_structured(
+        model=JUDGE_MODEL,
         prompt=JUDGE_PROMPT.format(text=text, topic=expected_topic),
         response_model=TopicJudgement,
     )

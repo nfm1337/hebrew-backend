@@ -6,16 +6,16 @@ from typing import Any
 
 import pytest
 
+from evals.cache import cached_generate_hebrew_session
 from evals.judges.grammar_judge import judge_grammar
 from evals.judges.level_judge import judge_level
 from evals.judges.topic_judge import judge_topic
 from hebrew_backend.models import Level
-from hebrew_backend.services.generation import generate_hebrew_session
 
 MODELS_TO_TEST = [
     "anthropic/claude-sonnet-4-6",
-    "openrouter/google/gemini-3-flash-preview",
     "openrouter/google/gemma-4-31b-it",
+    "openrouter/meta-llama/llama-3.3-70b-instruct",
 ]
 
 
@@ -25,7 +25,7 @@ async def test_generation_quality(case: dict[str, Any], model: str, report_dir: 
     level = Level[case["level"]]
     topic = case["topic"]
 
-    result = await generate_hebrew_session(level=level, topic=topic, model=model)
+    result = await cached_generate_hebrew_session(level=level, topic=topic, model=model)
 
     level_judgement, topic_judgement, grammar_judgement = await asyncio.gather(
         judge_level(result.generated_text, case["level"], result.target_words),

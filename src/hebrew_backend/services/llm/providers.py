@@ -107,15 +107,26 @@ class OpenRouterProvider:
         model: str,
         prompt: str,
         response_model: type[T],
-        max_tokens: int = 4000,
+        max_tokens: int = 6000,
+        _max_attempts: int = 3,
     ) -> T:
-        try:
-            result = await self._client.chat.completions.create(
-                model=model,
-                response_model=response_model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=max_tokens,
-            )
-            return cast("T", result)
-        except Exception as e:
-            raise LLMProviderError(self.provider_name, str(e), e) from e
+        last_exc: Exception = RuntimeError("no attempts made")
+        for attempt in range(_max_attempts):
+            try:
+                result = await self._client.chat.completions.create(
+                    model=model,
+                    response_model=response_model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=max_tokens,
+                    max_retries=0,  # disable instructor's history-based retry
+                )
+                return cast("T", result)
+            except Exception as e:
+                last_exc = e
+                if attempt == _max_attempts - 1:
+                    break
+                from openai import AuthenticationError, PermissionDeniedError
+
+                if isinstance(e, AuthenticationError | PermissionDeniedError):
+                    break
+        raise LLMProviderError(self.provider_name, str(last_exc), last_exc) from last_exc
